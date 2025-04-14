@@ -1,0 +1,73 @@
+.login-pf {
+  background: none;
+}
+
+.login-pf body {
+  background: none;
+}
+
+.card-pf {
+  border: 0;
+  border-radius: 8px;
+}
+
+#kc-header-wrapper {
+  color: #333;
+  font-weight: 700;
+}
+
+#kc-page-title {
+  font-weight: 600;
+}
+
+.form-group {
+  --pf-c-form__label--FontSize: 0.9rem;
+  --pf-c-form__label--FontWeight: 400;
+  color: #333;
+}
+
+.pf-c-form-control {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.pf-c-form-control[type='password'] {
+  padding-right: 40px;
+}
+
+.pf-c-form-control:hover,
+.pf-c-form-control:focus {
+  border: 1px solid #ccc;
+}
+
+.pf-c-input-group {
+  position: relative;
+  display: inline-block;
+}
+
+.pf-c-button.pf-m-control {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  transition: background-color 0.15s ease;
+}
+
+.pf-c-button.pf-m-control::after {
+  content: none;
+}
+
+.pf-c-button.pf-m-control:hover,
+.pf-c-button.pf-m-control:focus {
+  background-color: #d3d3d376;
+}
+
+#kc-form-buttons {
+  --pf-global--primary-color--100: #00ae1c;
+  --pf-global--primary-color--200: #04c424;
+}
