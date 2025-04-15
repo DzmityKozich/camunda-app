@@ -1,0 +1,16 @@
+.process-info-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: 1rem;
+}
+
+.process-definition-data {
+  grid-row: 1 / span 3;
+  grid-column: 4;
+}
+
+.process-definition-diagram {
+  grid-row: 1 / span 3;
+  grid-column: 1 / span 3;
+}

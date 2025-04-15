@@ -1,1 +1,14 @@
-<p>nav-bar works!</p>
+<mat-toolbar>
+  <a class="logo-link" [routerLink]="['/']">Camunda App</a>
+
+  <span class="example-spacer"></span>
+
+  <button mat-icon-button [matMenuTriggerFor]="navBarMenu">
+    <mat-icon>person</mat-icon>
+  </button>
+  <mat-menu #navBarMenu="matMenu">
+    <button mat-menu-item>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

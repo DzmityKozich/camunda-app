@@ -6,6 +6,14 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
+    path: 'process-definitions',
+    renderMode: RenderMode.Server,
+  },
+  {
+    path: 'process-definitions/key/:processDefinitionKey',
+    renderMode: RenderMode.Server,
+  },
+  {
     path: 'login',
     renderMode: RenderMode.Server,
   },

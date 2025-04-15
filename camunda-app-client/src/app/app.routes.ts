@@ -9,6 +9,11 @@ export const routes: Routes = [
   },
   {
     path: '',
+    redirectTo: 'process-definitions',
+    pathMatch: 'full',
+  },
+  {
+    path: 'process-definitions',
     loadComponent: () =>
       import('./pages/layout').then((m) => m.LayoutComponent),
     canActivate: [authGuard],
@@ -18,6 +23,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/process-definition-list').then(
             (m) => m.ProcessDefinitionListComponent
+          ),
+      },
+      {
+        path: 'key/:processDefinitionKey',
+        loadComponent: () =>
+          import('./pages/process-definition-info').then(
+            (m) => m.ProcessDefinitionInfoComponent
           ),
       },
     ],

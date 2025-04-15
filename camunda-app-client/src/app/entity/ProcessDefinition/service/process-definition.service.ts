@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {
   ProcessDefinition,
@@ -27,6 +27,16 @@ export class ProcessDefinitionService {
   public getProcessDefinitionsByKey(
     key: string
   ): Observable<ProcessDefinition[]> {
-    return this.http.post<ProcessDefinition[]>(`${this.url}/versions`, { key });
+    return this.http.post<ProcessDefinition[]>(`${this.url}`, {
+      key,
+      sortBy: 'version',
+      sortOrder: 'desc',
+    });
+  }
+
+  public getProcessDefinitionDiagram(id: string): Observable<string> {
+    return this.http
+      .get<{ bpmn20Xml: string }>(`${this.url}/${id}/xml`)
+      .pipe(map(({ bpmn20Xml }) => bpmn20Xml));
   }
 }

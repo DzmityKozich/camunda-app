@@ -1,0 +1,49 @@
+<mat-list>
+  <mat-list-item>
+    <div matListItemTitle>Definition Name</div>
+    <div matListItemLine>{{currentProcessDefinition()?.name}}</div>
+  </mat-list-item>
+
+  <mat-list-item>
+    <div matListItemTitle>Definition Key</div>
+    <div matListItemLine>{{currentProcessDefinition()?.key}}</div>
+  </mat-list-item>
+
+  <mat-list-item>
+    <div matListItemTitle>Definition ID</div>
+    <div matListItemLine>{{currentProcessDefinition()?.id}}</div>
+  </mat-list-item>
+
+  <mat-list-item lines="2">
+    <div matListItemTitle>Version</div>
+
+    <div matListItemMeta>
+      <mat-form-field>
+        <mat-select [value]="currentProcessDefinition()?.version" (selectionChange)="selectVersion($event.value)">
+          @for (def of processDefinitions(); track def.id) {
+          <mat-option [value]="def.version">{{def.version}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </mat-list-item>
+
+  <mat-list-item>
+    <div matListItemTitle>Resource</div>
+    <div matListItemLine>{{currentProcessDefinition()?.resource}}</div>
+  </mat-list-item>
+
+  <mat-list-item>
+    <div matListItemTitle>Tenant ID</div>
+    @if (currentProcessDefinition()?.tenantId) {
+    <div matListItemLine>{{currentProcessDefinition()?.tenantId}}</div>
+    } @else {
+    <div matListItemLine class="font-italic">None</div>
+    }
+  </mat-list-item>
+
+  <mat-list-item>
+    <div matListItemTitle>Deployment Id</div>
+    <div matListItemLine>{{currentProcessDefinition()?.deploymentId}}</div>
+  </mat-list-item>
+</mat-list>
