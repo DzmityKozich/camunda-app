@@ -10,6 +10,7 @@ import {
   ProcessDefinition,
   ProcessDefinitionService,
 } from 'entity/ProcessDefinition';
+import { HistoricProcessInstanceApiService } from 'entity/HistoricProcessInstance';
 import { ProcessInstanceService } from 'entity/ProcessInstance';
 import {
   BehaviorSubject,
@@ -21,10 +22,17 @@ import {
 import { ProcessDefinitionDataComponent } from '../process-definition-data/process-definition-data.component';
 import { AsyncPipe } from '@angular/common';
 import { BpmnModelerComponent } from 'feature/bpmn-modeler';
+import { ProcessDefinitionStatistics } from '../../model/ProcessDefinitionStatistics';
+import { ProcessDefinitionStatisticsComponent } from '../process-definition-statistics/process-definition-statistics.component';
 
 @Component({
   selector: 'cca-process-definition-info',
-  imports: [ProcessDefinitionDataComponent, AsyncPipe, BpmnModelerComponent],
+  imports: [
+    ProcessDefinitionDataComponent,
+    AsyncPipe,
+    BpmnModelerComponent,
+    ProcessDefinitionStatisticsComponent,
+  ],
   templateUrl: './process-definition-info.component.html',
   styleUrl: './process-definition-info.component.scss',
 })
@@ -34,9 +42,17 @@ export class ProcessDefinitionInfoComponent implements OnInit, OnDestroy {
   protected processDefinitions = signal<ProcessDefinition[]>([]);
   protected selectedDefinition$ = new BehaviorSubject<string>('');
   protected diagram = signal<string>('');
+  protected statistics = signal<ProcessDefinitionStatistics>({
+    active: 0,
+    completed: 0,
+    suspended: 0,
+  });
 
   private processDefinitionService = inject(ProcessDefinitionService);
   private processInstanceService = inject(ProcessInstanceService);
+  private historicProcessInstanceService = inject(
+    HistoricProcessInstanceApiService
+  );
   private subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
@@ -66,9 +82,9 @@ export class ProcessDefinitionInfoComponent implements OnInit, OnDestroy {
           filter((id) => !!id),
           mergeMap((id) => this.getProcessDefinitionData(id))
         )
-        .subscribe(({ xml, processInstances }) => {
+        .subscribe(({ xml, processInstances, history, statistics }) => {
           this.diagram.set(xml);
-          console.log({ xml, processInstances });
+          console.log({ xml, processInstances, history, statistics });
         })
     );
   }
@@ -79,6 +95,11 @@ export class ProcessDefinitionInfoComponent implements OnInit, OnDestroy {
       processInstances: this.processInstanceService.getProcessInstanceList({
         processDefinitionId: id,
       }),
+      history:
+        this.historicProcessInstanceService.getProcessInstanceHistoryList({
+          processDefinitionId: id,
+        }),
+      statistics: this.historicProcessInstanceService.getStatistics(),
     });
   }
 

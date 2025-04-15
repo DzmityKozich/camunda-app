@@ -1,15 +1,11 @@
 <div class="process-info-layout">
-
   <div class="process-definition-diagram">
     <cca-bpmn-modeler [xml]="diagram()"></cca-bpmn-modeler>
   </div>
-
-  <div class="process-definition-statistics"></div>
-
-  <div class="process-definition-instances"></div>
 
   <div class="process-definition-data">
     <cca-process-definition-data [processDefinitions]="processDefinitions()"
       [selectedDefinition]="(selectedDefinition$ | async)!" (definitionIdSelect)="selectDefinition($event)" />
   </div>
 </div>
+<cca-process-definition-statistics [statistics]="statistics()"></cca-process-definition-statistics>
