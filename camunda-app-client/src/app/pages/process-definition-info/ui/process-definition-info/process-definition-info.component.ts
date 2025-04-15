@@ -44,6 +44,10 @@ export class ProcessDefinitionInfoComponent implements OnInit, OnDestroy {
     this.listenProcessDefinitionIdChange();
   }
 
+  protected selectDefinition(id: string) {
+    this.selectedDefinition$.next(id);
+  }
+
   private getProcessDefinitions() {
     this.subscriptions.push(
       this.processDefinitionService

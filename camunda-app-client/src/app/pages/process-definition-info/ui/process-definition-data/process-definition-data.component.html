@@ -19,9 +19,9 @@
 
     <div matListItemMeta>
       <mat-form-field>
-        <mat-select [value]="currentProcessDefinition()?.version" (selectionChange)="selectVersion($event.value)">
+        <mat-select [value]="currentProcessDefinition()?.id" (selectionChange)="selectVersion($event.value)">
           @for (def of processDefinitions(); track def.id) {
-          <mat-option [value]="def.version">{{def.version}}</mat-option>
+          <mat-option [value]="def.id">{{def.version}}</mat-option>
           }
         </mat-select>
       </mat-form-field>

@@ -10,6 +10,6 @@
 
   <div class="process-definition-data">
     <cca-process-definition-data [processDefinitions]="processDefinitions()"
-      [selectedDefinition]="(selectedDefinition$ | async)!" />
+      [selectedDefinition]="(selectedDefinition$ | async)!" (definitionIdSelect)="selectDefinition($event)" />
   </div>
 </div>

@@ -15,7 +15,7 @@ export class ProcessDefinitionDataComponent {
   public processDefinitions = input.required<ProcessDefinition[]>();
   public selectedDefinition = input.required<string>();
 
-  public versionSelect = output<string>();
+  public definitionIdSelect = output<string>();
 
   protected currentProcessDefinition = computed(() =>
     this.processDefinitions().find(
@@ -24,6 +24,6 @@ export class ProcessDefinitionDataComponent {
   );
 
   protected selectVersion(event: string): void {
-    this.versionSelect.emit(event);
+    this.definitionIdSelect.emit(event);
   }
 }
