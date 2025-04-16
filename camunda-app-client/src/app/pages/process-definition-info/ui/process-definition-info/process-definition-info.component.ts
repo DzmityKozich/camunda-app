@@ -84,6 +84,7 @@ export class ProcessDefinitionInfoComponent implements OnInit, OnDestroy {
         )
         .subscribe(({ xml, processInstances, history, statistics }) => {
           this.diagram.set(xml);
+          this.statistics.set(statistics);
           console.log({ xml, processInstances, history, statistics });
         })
     );
