@@ -18,8 +18,4 @@ export class HistoricProcessInstanceApiService {
   ): Observable<HistoricProcessInstance[]> {
     return this.http.post<HistoricProcessInstance[]>(this.url, filter);
   }
-
-  public getStatistics(): Observable<any> {
-    return this.http.get<any>(`${this.url}/statistics`);
-  }
 }

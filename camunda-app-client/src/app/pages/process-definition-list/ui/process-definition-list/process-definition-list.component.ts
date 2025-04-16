@@ -1,18 +1,8 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  signal,
-  effect,
-  input,
-} from '@angular/core';
-import {
-  ProcessDefinition,
-  ProcessDefinitionService,
-} from 'entity/ProcessDefinition';
-import { Subscription } from 'rxjs';
+import { Component, inject, OnInit, signal, effect } from '@angular/core';
+import { ProcessDefinition } from 'entity/ProcessDefinition';
 import { MatDividerModule } from '@angular/material/divider';
 import { ProcessDefinitionCardComponent } from 'widgets/process-definition-card';
+import { ProcessDefinitionListStore } from '../../store/process-deinition-list.store';
 
 @Component({
   selector: 'cca-process-definition-list',
@@ -21,44 +11,16 @@ import { ProcessDefinitionCardComponent } from 'widgets/process-definition-card'
   styleUrl: './process-definition-list.component.scss',
 })
 export class ProcessDefinitionListComponent implements OnInit {
-  // public processDefinitionKey = input<string | null>(null, { alias: 'key' });
-
   protected processDefinitions = signal<ProcessDefinition[]>([]);
-
-  private processDefinitionService = inject(ProcessDefinitionService);
-  private sunbscribtions: Subscription[] = [];
+  protected processDefStore = inject(ProcessDefinitionListStore);
 
   constructor() {
     effect(() => {
-      console.log(this.processDefinitions());
+      console.log(this.processDefStore.list());
     });
   }
 
   ngOnInit(): void {
-    this.getProcessDefinitionList();
-    // this.fetchProcessDefinitions();
-  }
-
-  // private fetchProcessDefinitions(): void {
-  //   if (this.processDefinitionKey()) {
-  //     this.getProcessDefinitionsByKey();
-  //   } else {
-  //   }
-  // }
-
-  // private getProcessDefinitionsByKey(): void {
-  //   this.sunbscribtions.push(
-  //     this.processDefinitionService
-  //       .getProcessDefinitionsByKey(this.processDefinitionKey()!)
-  //       .subscribe((defs) => this.processDefinitions.set(defs))
-  //   );
-  // }
-
-  private getProcessDefinitionList(): void {
-    this.sunbscribtions.push(
-      this.processDefinitionService
-        .getProcessDefinitionList()
-        .subscribe((defs) => this.processDefinitions.set(defs))
-    );
+    this.processDefStore.loadProcessDefinitionList();
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ProcessDefinitionService } from '../service/process-definition.service';
 import { ProcessDefinitionFilter } from '../model/ProcessDefinition';
 
@@ -7,6 +7,7 @@ export class ProcessDefinitionController {
   constructor(private processDefinitionService: ProcessDefinitionService) {}
 
   @Post()
+  @HttpCode(200)
   public getProcessDefinitionList(@Body() filter?: ProcessDefinitionFilter) {
     return this.processDefinitionService.getProcessDefinitionList(filter);
   }

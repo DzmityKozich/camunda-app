@@ -1,10 +1,18 @@
 import { Module } from '@nestjs/common';
 import { ProcessInstanceController } from './controller/process-instance.controller';
 import { ProcessInstanceService } from './service/process-instance.service';
-import { ProcessInstanceStatisticsService } from './service/process-instance-statistics.service';
+import { IncidentService } from './service/incident.service';
+import { StatisticsController } from './controller/statistics.controller';
+import { StatisticsService } from './service/statistics.service';
+import { UserTaskService } from './service/user-task.service';
 
 @Module({
-  providers: [ProcessInstanceService, ProcessInstanceStatisticsService],
-  controllers: [ProcessInstanceController],
+  providers: [
+    ProcessInstanceService,
+    IncidentService,
+    StatisticsService,
+    UserTaskService,
+  ],
+  controllers: [ProcessInstanceController, StatisticsController],
 })
 export class HistoryApiModule {}

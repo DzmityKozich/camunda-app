@@ -1,5 +1,5 @@
 <div class="process-definition-list">
-  @for (def of processDefinitions(); track def.id) {
+  @for (def of processDefStore.list(); track def.id) {
   <cca-process-definition-card [processDefinition]="def"></cca-process-definition-card>
   }
 </div>
