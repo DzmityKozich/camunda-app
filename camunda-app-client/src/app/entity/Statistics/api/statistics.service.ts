@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProcessLifeStatistics, SuccessRate } from '../model/history-statistics';
+import { AvgTimeToCompleteStatistics, ProcessLifeStatistics, SuccessRate } from '../model/statistics';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -18,5 +18,15 @@ export class StatisticsService {
 
 	public getSuccessRateStatistics(processDefinitionId: string): Observable<SuccessRate> {
 		return this.http.get<SuccessRate>(`${this.url}/success-rate/${processDefinitionId}`);
+	}
+
+	public getAverageTimeToComplete(
+		processDefinitionId: string,
+		fromDate: string,
+		toDate: string
+	): Observable<AvgTimeToCompleteStatistics[]> {
+		return this.http.get<AvgTimeToCompleteStatistics[]>(
+			`${this.url}/avg-time-to-complete?processDefinitionId=${processDefinitionId}&fromDate=${fromDate}&toDate=${toDate}`
+		);
 	}
 }

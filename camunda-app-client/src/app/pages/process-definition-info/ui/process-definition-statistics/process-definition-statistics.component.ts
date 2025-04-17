@@ -1,7 +1,7 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, effect, ElementRef, input, OnDestroy, viewChild } from '@angular/core';
-import { ProcessDefinitionStatistics } from '../../model/ProcessDefinitionStatistics';
+import { AfterViewInit, ChangeDetectionStrategy, Component, effect, ElementRef, input, viewChild } from '@angular/core';
+import { AvgTimeToCompleteStatistics, ProcessLifeStatistics } from 'entity/Statistics';
 import { Chart } from 'chart.js/auto';
-import { SuccessRate } from 'entity/HistoricProcessInstance';
+import { SuccessRate } from 'entity/Statistics';
 
 const CHART_COLORS = {
 	green: 'rgb(99, 255, 99)',
@@ -18,14 +18,18 @@ const CHART_COLORS = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProcessDefinitionStatisticsComponent implements AfterViewInit {
-	public lifeStatistics = input.required<ProcessDefinitionStatistics>();
+	public lifeStatistics = input.required<ProcessLifeStatistics>();
 	public successRateStatistics = input.required<SuccessRate>();
+	public userTaskCount = input.required<number>();
+	public avgTimeToCompleteStatistics = input.required<AvgTimeToCompleteStatistics[]>();
 
 	protected lifeChart = viewChild.required<ElementRef<HTMLCanvasElement>>('lifeChart');
 	protected successRate = viewChild.required<ElementRef<HTMLCanvasElement>>('successRate');
+	protected avgTimeToComplete = viewChild.required<ElementRef<HTMLCanvasElement>>('avgTimeToComplete');
 
 	private lifeStatChart!: Chart;
 	private successRateChart!: Chart;
+	private avgTimeToCompleteChart!: Chart;
 
 	constructor() {
 		this.listenForStatisticsChange();
@@ -34,6 +38,7 @@ export class ProcessDefinitionStatisticsComponent implements AfterViewInit {
 	private listenForStatisticsChange() {
 		this.listenLifeStatisticsChange();
 		this.listenForSuccessRateChange();
+		this.listenForAvgTimeToCompleteChange();
 	}
 
 	private listenLifeStatisticsChange(): void {
@@ -57,6 +62,17 @@ export class ProcessDefinitionStatisticsComponent implements AfterViewInit {
 		});
 	}
 
+	private listenForAvgTimeToCompleteChange(): void {
+		effect(() => {
+			const { dateLabels, data } = this.avgTimeToCompleteData();
+			if (this.avgTimeToCompleteChart) {
+				this.avgTimeToCompleteChart.data.labels = dateLabels;
+				this.avgTimeToCompleteChart.data.datasets[0].data = data;
+				this.avgTimeToCompleteChart.update();
+			}
+		});
+	}
+
 	ngAfterViewInit(): void {
 		this.initCharts();
 	}
@@ -64,6 +80,7 @@ export class ProcessDefinitionStatisticsComponent implements AfterViewInit {
 	private initCharts(): void {
 		this.initLifeStatisChart();
 		this.initSuccessRateChart();
+		this.initAvgTimeToCompleteChart();
 	}
 
 	private initLifeStatisChart(): void {
@@ -102,5 +119,31 @@ export class ProcessDefinitionStatisticsComponent implements AfterViewInit {
 				],
 			},
 		});
+	}
+
+	private initAvgTimeToCompleteChart(): void {
+		const { dateLabels, data } = this.avgTimeToCompleteData();
+		this.avgTimeToCompleteChart = new Chart(this.avgTimeToComplete().nativeElement, {
+			type: 'bar',
+			options: {
+				responsive: true,
+			},
+			data: {
+				labels: dateLabels,
+				datasets: [
+					{
+						label: 'Average time to complete',
+						data,
+						backgroundColor: CHART_COLORS.blue,
+					},
+				],
+			},
+		});
+	}
+
+	private avgTimeToCompleteData() {
+		const dateLabels = this.avgTimeToCompleteStatistics().reduce<string[]>((labels, stat) => [...labels, stat.date], []);
+		const data = this.avgTimeToCompleteStatistics().reduce<number[]>((data, stat) => [...data, stat.avgTime / 1000], []);
+		return { dateLabels, data };
 	}
 }

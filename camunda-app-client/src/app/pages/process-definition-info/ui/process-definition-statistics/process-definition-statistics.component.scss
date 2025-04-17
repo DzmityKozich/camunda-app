@@ -1,11 +1,28 @@
 .statistics-layout {
-  display: grid;
-  width: 100%;
-  min-height: 300px;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 1fr;
+	display: grid;
+	width: 100%;
+	min-height: 300px;
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: 1fr;
 }
 
 .life-chart {
-  position: relative;
+	position: relative;
+}
+
+.user-task-count {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	& h1,
+	h5 {
+		margin: 0;
+	}
+
+	& h1 {
+		font-size: 7rem;
+		margin: 0;
+	}
 }

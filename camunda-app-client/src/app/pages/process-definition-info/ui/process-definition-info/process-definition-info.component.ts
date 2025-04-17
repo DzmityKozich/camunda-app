@@ -5,10 +5,10 @@ import { BehaviorSubject, filter, forkJoin, mergeMap, Subscription } from 'rxjs'
 import { ProcessDefinitionDataComponent } from '../process-definition-data/process-definition-data.component';
 import { AsyncPipe } from '@angular/common';
 import { BpmnModelerComponent } from 'feature/bpmn-modeler';
-import { ProcessDefinitionStatistics } from '../../model/ProcessDefinitionStatistics';
 import { ProcessDefinitionStatisticsComponent } from '../process-definition-statistics/process-definition-statistics.component';
-import { StatisticsService } from 'entityHistoricProcessInstance/api/statistics.service';
-import { SuccessRate } from 'entityHistoricProcessInstance';
+import { SuccessRate, StatisticsService, ProcessLifeStatistics, AvgTimeToCompleteStatistics } from 'entity/Statistics';
+import { HistoricUserTaskService } from 'entityHistoricUserTask/api/historic-user-task.service';
+import { getLastMonth } from '../../lib/utils';
 
 @Component({
 	selector: 'cca-process-definition-info',
@@ -23,7 +23,9 @@ export class ProcessDefinitionInfoComponent implements OnInit, OnDestroy {
 	protected selectedDefinition$ = new BehaviorSubject<string>('');
 	protected diagram = signal<string>('');
 	protected successRateStatistics = signal<SuccessRate>({ total: 0, withIncidents: 0 });
-	protected statistics = signal<ProcessDefinitionStatistics>({
+	protected userTaskCount = signal<number>(0);
+	protected avgTimeToComplete = signal<AvgTimeToCompleteStatistics[]>([]);
+	protected statistics = signal<ProcessLifeStatistics>({
 		active: 0,
 		completed: 0,
 		suspended: 0,
@@ -32,6 +34,7 @@ export class ProcessDefinitionInfoComponent implements OnInit, OnDestroy {
 	private processDefinitionService = inject(ProcessDefinitionService);
 	private processInstanceService = inject(ProcessInstanceService);
 	private staticsService = inject(StatisticsService);
+	private historicUserTaskService = inject(HistoricUserTaskService);
 	private subscriptions: Subscription[] = [];
 
 	ngOnInit(): void {
@@ -59,23 +62,27 @@ export class ProcessDefinitionInfoComponent implements OnInit, OnDestroy {
 					filter((id) => !!id),
 					mergeMap((id) => this.getProcessDefinitionData(id))
 				)
-				.subscribe(({ xml, processInstances, lifeStatistics, successRate }) => {
+				.subscribe(({ xml, processInstances, lifeStatistics, successRate, userTaskCount, avgTimeToComplete }) => {
 					this.diagram.set(xml);
 					this.statistics.set(lifeStatistics);
 					this.successRateStatistics.set(successRate);
-					console.log({ xml, processInstances, lifeStatistics, successRate });
+					this.userTaskCount.set(userTaskCount);
+					this.avgTimeToComplete.set(avgTimeToComplete);
+					console.log({ xml, processInstances, lifeStatistics, avgTimeToComplete });
 				})
 		);
 	}
 
 	private getProcessDefinitionData(id: string) {
+		const filter = { processDefinitionId: id };
+		const { monthAgo, today } = getLastMonth();
 		return forkJoin({
 			xml: this.processDefinitionService.getProcessDefinitionDiagram(id),
-			processInstances: this.processInstanceService.getProcessInstanceList({
-				processDefinitionId: id,
-			}),
+			processInstances: this.processInstanceService.getProcessInstanceList(filter),
 			lifeStatistics: this.staticsService.getProcessLifeStatistics(id),
 			successRate: this.staticsService.getSuccessRateStatistics(id),
+			userTaskCount: this.historicUserTaskService.countHistoricTasks(filter),
+			avgTimeToComplete: this.staticsService.getAverageTimeToComplete(id, monthAgo, today),
 		});
 	}
 

@@ -8,5 +8,6 @@
       [selectedDefinition]="(selectedDefinition$ | async)!" (definitionIdSelect)="selectDefinition($event)" />
   </div>
 </div>
-<cca-process-definition-statistics [lifeStatistics]="statistics()"
-  [successRateStatistics]="successRateStatistics()"></cca-process-definition-statistics>
+<cca-process-definition-statistics [lifeStatistics]="statistics()" [successRateStatistics]="successRateStatistics()"
+  [userTaskCount]="userTaskCount()"
+  [avgTimeToCompleteStatistics]="avgTimeToComplete()"></cca-process-definition-statistics>
